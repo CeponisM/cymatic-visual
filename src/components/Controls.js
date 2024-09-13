@@ -2,17 +2,17 @@ import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 
 const Controls = ({
-  frequency = 1000000,
+  frequency,
   setFrequency,
-  amplitude = 1.0,
+  amplitude,
   setAmplitude,
-  fluidDepth = 0.01,
-  setFluidDepth,
-  damping = 0.1,
-  setDamping,
-  mode = 0,
+  mode,
   setMode,
-  isAnimating = true,
+  visualMode,
+  setVisualMode,
+  fps,
+  setFps,
+  isAnimating,
   toggleAnimation,
   handleExport,
   playAudio,
@@ -95,31 +95,19 @@ const Controls = ({
         />
       </div>
       <div>
-        <label className="block mb-2 font-medium">Fluid Depth: {fluidDepth.toFixed(3)} m</label>
+        <label className="block mb-2 font-medium">FPS: {fps}</label>
         <SliderWithButtons
-          value={fluidDepth}
-          setValue={setFluidDepth}
-          min={0.001}
-          max={0.1}
-          step={0.001}
-          formatValue={(v) => `${v.toFixed(3)} m`}
-          label="Fluid Depth"
+          value={fps}
+          setValue={setFps}
+          min={1}
+          max={120}
+          step={1}
+          formatValue={(v) => Math.round(v)}
+          label="FPS"
         />
       </div>
       <div>
-        <label className="block mb-2 font-medium">Damping: {damping.toFixed(3)}</label>
-        <SliderWithButtons
-          value={damping}
-          setValue={setDamping}
-          min={0}
-          max={1}
-          step={0.001}
-          formatValue={(v) => v.toFixed(3)}
-          label="Damping"
-        />
-      </div>
-      <div>
-        <label className="block mb-2 font-medium">Pattern Mode:</label>
+        <label className="block mb-2 font-medium">Container Shape:</label>
         <select
           value={mode}
           onChange={(e) => setMode(Number(e.target.value))}
@@ -127,7 +115,18 @@ const Controls = ({
         >
           <option value={0}>Circular</option>
           <option value={1}>Square</option>
-          <option value={2}>Star</option>
+          <option value={2}>Triangular</option>
+        </select>
+      </div>
+      <div>
+        <label className="block mb-2 font-medium">Visualization Mode:</label>
+        <select
+          value={visualMode}
+          onChange={(e) => setVisualMode(Number(e.target.value))}
+          className="w-full p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value={0}>Color</option>
+          <option value={1}>Lines</option>
         </select>
       </div>
       <div className="flex flex-wrap gap-2">
