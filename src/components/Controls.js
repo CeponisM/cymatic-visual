@@ -6,12 +6,12 @@ const Controls = ({
   setFrequency,
   amplitude,
   setAmplitude,
-  mode,
-  setMode,
-  visualMode,
-  setVisualMode,
+  plateShape,
+  setPlateShape,
   fps,
   setFps,
+  particleSize,
+  setParticleSize,
   isAnimating,
   toggleAnimation,
   handleExport,
@@ -19,16 +19,14 @@ const Controls = ({
   stopAudio
 }) => {
   const formatFrequency = (freq) => {
-    if (freq >= 1000000) {
-      return `${(freq / 1000000).toFixed(2)} MHz`;
-    } else if (freq >= 1000) {
+    if (freq >= 1000) {
       return `${(freq / 1000).toFixed(2)} kHz`;
     } else {
       return `${freq.toFixed(2)} Hz`;
     }
   };
 
-  const SliderWithButtons = ({ value, setValue, min, max, step, formatValue, label }) => {
+  const SliderWithButtons = React.memo(({ value, setValue, min, max, step, formatValue, label }) => {
     const decrease = () => setValue(Math.max(min, value - step));
     const increase = () => setValue(Math.min(max, value + step));
 
@@ -66,7 +64,7 @@ const Controls = ({
         </button>
       </div>
     );
-  };
+  });
 
   return (
     <div className="space-y-6">
@@ -75,9 +73,9 @@ const Controls = ({
         <SliderWithButtons
           value={frequency}
           setValue={setFrequency}
-          min={1}
-          max={30000000}
-          step={1000}
+          min={20}
+          max={20000}
+          step={1}
           formatValue={formatFrequency}
           label="Frequency"
         />
@@ -95,6 +93,18 @@ const Controls = ({
         />
       </div>
       <div>
+        <label className="block mb-2 font-medium">Particle Size: {particleSize.toFixed(4)}</label>
+        <SliderWithButtons
+          value={particleSize}
+          setValue={setParticleSize}
+          min={0.001}
+          max={0.01}
+          step={0.0001}
+          formatValue={(v) => v.toFixed(4)}
+          label="Particle Size"
+        />
+      </div>
+      <div>
         <label className="block mb-2 font-medium">FPS: {fps}</label>
         <SliderWithButtons
           value={fps}
@@ -107,26 +117,15 @@ const Controls = ({
         />
       </div>
       <div>
-        <label className="block mb-2 font-medium">Container Shape:</label>
+        <label className="block mb-2 font-medium">Plate Shape:</label>
         <select
-          value={mode}
-          onChange={(e) => setMode(Number(e.target.value))}
+          value={plateShape}
+          onChange={(e) => setPlateShape(Number(e.target.value))}
           className="w-full p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <option value={0}>Circular</option>
+          <option value={0}>Circle</option>
           <option value={1}>Square</option>
-          <option value={2}>Triangular</option>
-        </select>
-      </div>
-      <div>
-        <label className="block mb-2 font-medium">Visualization Mode:</label>
-        <select
-          value={visualMode}
-          onChange={(e) => setVisualMode(Number(e.target.value))}
-          className="w-full p-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <option value={0}>Color</option>
-          <option value={1}>Lines</option>
+          <option value={2}>Triangle</option>
         </select>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -134,7 +133,7 @@ const Controls = ({
           onClick={toggleAnimation} 
           className="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded transition-colors duration-200"
         >
-          {isAnimating ? 'Stop Animation' : 'Start Animation'}
+          {isAnimating ? 'Pause Simulation' : 'Resume Simulation'}
         </button>
         <button 
           onClick={handleExport} 
@@ -155,4 +154,4 @@ const Controls = ({
   );
 };
 
-export default Controls;
+export default React.memo(Controls);
