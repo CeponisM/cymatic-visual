@@ -1,20 +1,29 @@
-import * as Tone from 'tone';
+let audioContext = null;
+let oscillator = null;
 
-let synth = null;
-
-export function initAudio() {
-  synth = new Tone.Synth().toDestination();
-}
-
-export function playTone(frequency) {
-  if (synth) {
-    synth.frequency.value = frequency;
-    synth.triggerAttack();
+export const initAudio = () => {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-}
+};
 
-export function stopTone() {
-  if (synth) {
-    synth.triggerRelease();
+export const playTone = (frequency) => {
+  if (!audioContext) {
+    initAudio();
   }
-}
+  if (oscillator) {
+    oscillator.stop();
+  }
+  oscillator = audioContext.createOscillator();
+  oscillator.type = 'sine'; // Sine wave for pure tone
+  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  oscillator.connect(audioContext.destination);
+  oscillator.start();
+};
+
+export const stopTone = () => {
+  if (oscillator) {
+    oscillator.stop();
+    oscillator = null;
+  }
+};
