@@ -27,7 +27,7 @@ A real-time, interactive visualization of Chladni patterns using WebGL and React
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/chladni-plate-simulator.git
+git clone https://github.com/CeponisM/cymatic-visual.git
 cd chladni-plate-simulator
 ```
 
